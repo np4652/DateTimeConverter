@@ -1,0 +1,46 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Datetime Converter</h1>
+    <p>Convert datetime(any pattern) in specific patter.</p>
+</div>
+<div class="row">
+    <div class="col-sm-4"></div>
+    <div class="col-sm-4">
+        <div class="form-group">
+            <select class="form-control" id="ddlFormat">
+                <option value="dd MMM yyyy">dd MMM yyy (i.e 01 JAN 2001)</option>
+                <option value="dd-MM-yyyy">dd-MM-yyyy (i.e 01-01-2001)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" id="txtDate"/>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-dark btn-block" id="btnConvert">Convert</button>
+        </div>
+        <div class="form-group">
+            <span id="convartedDate"></span>
+        </div>
+    </div>
+    <div class="col-sm-4"></div>
+</div>
+@section Scripts{
+    <script>
+        $('#btnConvert').click(e=>{
+            let targetEle = $('#convartedDate');
+            let date = $('#txtDate').val();
+            if(date==''){
+                targetEle.text("Please Fill Date")
+                return false;
+            }
+            let obj={
+                date,
+                format: $('#ddlFormat').val()
+            }
+            $.post('/home/ConvertDate', obj).done(result => targetEle.text(result)).fail(xhr => targetEle.text(xhr.responseText));
+        })
+    </script>
+}
