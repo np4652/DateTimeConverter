@@ -49,7 +49,7 @@ namespace DateTimeConverter.Controllers
             return Json(result ?? finalRes);
         }
 
-        private string convert(string _date, string format = "dd MMM yyyy")
+        private string convertOld(string _date, string format = "dd MMM yyyy")
         {
             string result = null;
             try
@@ -79,6 +79,29 @@ namespace DateTimeConverter.Controllers
             return result;
         }
 
+        private string convert(string _date, string format = "dd MMM yyyy")
+        {
+            string result = null;
+            try
+            {
+                var dateFormats = GetDateFormates();
+                string matchedFormat = GetDateFormates().Where(x => Regex.IsMatch(_date, x.Regex)).Select(x => x.Format).FirstOrDefault();
+                if (matchedFormat=="dd-MMM-yy hh:mm:ss t.t.")
+                {
+                    _date=_date.Replace(".", "");
+                    matchedFormat = "dd-MMM-yy hh:mm:ss tt";
+                }
+                DateTime.TryParseExact(_date, matchedFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dt);
+                result = dt.ToString(format);
+                result=result.Contains("0001",StringComparison.OrdinalIgnoreCase) ? null : result;
+            }
+            catch (Exception ex)
+            {
+                result = null;
+            }
+            return result;
+        }
+        
         private List<DateFormat> GetDateFormates()
         {
             return new List<DateFormat>{
