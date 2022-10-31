@@ -71,10 +71,6 @@ namespace DateTimeConverter.Controllers
                         break;
                     }
                 }
-                if (result==null)
-                {
-                    result = Convert.ToDateTime(_date).ToString(format);
-                }
             }
             catch(Exception ex)
             {
@@ -135,9 +131,9 @@ namespace DateTimeConverter.Controllers
                     Regex = @"([0-3][0-9])/([0-1][0-9])/\d{4} ([0-5][0-9]):([0-5][0-9])"
                 },
                 new DateFormat{
-                    Format="hh:mm tt dd MMM yyyy", //"01:51 PM 21 June 2022"
-                    Regex = @"([0-5][0-9]):([0-5][0-9]) ([aA|pP])(m|M) ([0-3][0-9]) ^(([a-zA-Z])([a-zA-Z])([a-zA-Z])) \d{4}?$"
-                },
+                    Format="hh:mm tt dd MMMM yyyy", //"01:51 PM 21 June 2022"
+                    Regex = @"([0-5][0-9]):([0-5][0-9]) ([aA|pP])(m|M) \d{2} [a-zA-Z]+ \d{4}$"
+        },
             };
         }
     }
