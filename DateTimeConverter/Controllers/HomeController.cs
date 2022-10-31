@@ -52,23 +52,33 @@ namespace DateTimeConverter.Controllers
         private string convert(string _date, string format = "dd MMM yyyy")
         {
             string result = null;
-            //string DateRegex = @"\d?[\/|\-|\s]?\d?[\/|\-|\s]\d(\s?)[\/|\-|\s]?\d?(\s?)[\/|\-|\s]\d{4}[\s]?$";
-            var dateFormats = GetDateFormates();
-            foreach (DateFormat df in dateFormats)
+            try
             {
-                if (Regex.IsMatch(_date, df.Regex))
+                var dateFormats = GetDateFormates();
+                foreach (DateFormat df in dateFormats)
                 {
-                    if (df.Format=="dd-MMM-yy hh:mm:ss t.t.")
+                    if (Regex.IsMatch(_date, df.Regex))
                     {
-                        _date=_date.Replace(".", "");
-                        df.Format="dd-MMM-yy hh:mm:ss tt";
+                        if (df.Format=="dd-MMM-yy hh:mm:ss t.t.")
+                        {
+                            _date=_date.Replace(".", "");
+                            df.Format="dd-MMM-yy hh:mm:ss tt";
+                        }
+                        DateTime dt = DateTime.Now.AddDays(1);
+                        DateTime.TryParseExact(_date, df.Format, CultureInfo.InvariantCulture, DateTimeStyles.None, out dt);
+                        result = dt > DateTime.Now ? null : dt.ToString(format);
+                        result=result=="01 Jan 0001" ? null : result;
+                        break;
                     }
-                    DateTime dt = DateTime.Now.AddDays(1);
-                    DateTime.TryParseExact(_date, df.Format, CultureInfo.InvariantCulture, DateTimeStyles.None, out dt);
-                    result = dt > DateTime.Now ? null : dt.ToString(format);
-                    result=result=="01 Jan 0001" ? null : result;
-                    break;
                 }
+                if (result==null)
+                {
+                    result = Convert.ToDateTime(_date).ToString(format);
+                }
+            }
+            catch(Exception ex)
+            {
+                result = null;
             }
             return result;
         }
@@ -90,7 +100,7 @@ namespace DateTimeConverter.Controllers
                 },
                 new DateFormat{
                     Format="dd/MM/yyyy",
-                    Regex = @"([0-3][0-9])/([0-1][0-9])/\d{4}"
+                    Regex = @"([0-3][0-9])/([0-1][0-9])/\d{4}?$"
                 },
                 new DateFormat{
                     Format="dd MMM yyyy",
@@ -119,6 +129,14 @@ namespace DateTimeConverter.Controllers
                 new DateFormat{
                     Format="yyyy-MM-ddThh:mm:ss",
                     Regex = @"\d{4}-([0-1][0-9])-([0-3][0-9])T([0-5][0-9]):([0-5][0-9]):([0-5][0-9])?$"
+                },
+                new DateFormat{
+                    Format="dd/MM/yyyy hh:mm",
+                    Regex = @"([0-3][0-9])/([0-1][0-9])/\d{4} ([0-5][0-9]):([0-5][0-9])"
+                },
+                new DateFormat{
+                    Format="hh:mm tt dd MMM yyyy", //"01:51 PM 21 June 2022"
+                    Regex = @"([0-5][0-9]):([0-5][0-9]) ([aA|pP])(m|M) ([0-3][0-9]) ^(([a-zA-Z])([a-zA-Z])([a-zA-Z])) \d{4}?$"
                 },
             };
         }
