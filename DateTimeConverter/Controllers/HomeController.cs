@@ -72,12 +72,14 @@ namespace DateTimeConverter.Controllers
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 result = null;
             }
             return result;
         }
+
+
 
         private string convert(string _date, string format = "dd MMM yyyy")
         {
@@ -93,7 +95,7 @@ namespace DateTimeConverter.Controllers
                 }
                 DateTime.TryParseExact(_date, matchedFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dt);
                 result = dt.ToString(format);
-                result=result.Contains("0001",StringComparison.OrdinalIgnoreCase) ? null : result;
+                result=result.Contains("0001", StringComparison.OrdinalIgnoreCase) ? null : result;
             }
             catch (Exception ex)
             {
@@ -101,7 +103,7 @@ namespace DateTimeConverter.Controllers
             }
             return result;
         }
-        
+
         private List<DateFormat> GetDateFormates()
         {
             return new List<DateFormat>{
@@ -131,32 +133,36 @@ namespace DateTimeConverter.Controllers
                 },
                 new DateFormat{
                     Format="dd MMM yyyy hh:mm:ss tt",
-                    Regex = @"([0-3][0-9]) ([a-zA-Z]{3}) \d{4} ([0-5][0-9]):([0-5][0-9]):([0-5][0-9]) ([aA|pP])(m|M)?$"
+                    Regex = @"([0-3][0-9]) ([a-zA-Z]{3}) \d{4} ([0-5][0-9]):([0-5][0-9]):([0-5][0-9]) ([aA|pP])(m|M)$"
                 },
                 new DateFormat{
                     Format="dd-MMM-yyyy hh:mm:ss t.t.",
-                    Regex = @"([0-3][0-9])-([a-zA-Z]{3})-\d{4} ([0-5][0-9]):([0-5][0-9]):([0-5][0-9]) ([aA|pP]).(m|M).?$"
+                    Regex = @"([0-3][0-9])-([a-zA-Z]{3})-\d{4} ([0-5][0-9]):([0-5][0-9]):([0-5][0-9]) ([aA|pP]).(m|M).$"
                 },
                 new DateFormat{
                     Format="dd-MMM-yy hh:mm:ss tt",
-                    Regex = @"([0-3][0-9])-([a-zA-Z]{3})-\d{2} ([0-5][0-9]):([0-5][0-9]):([0-5][0-9]) ([aA|pP])(m|M)?$"
+                    Regex = @"([0-3][0-9])-([a-zA-Z]{3})-\d{2} ([0-5][0-9]):([0-5][0-9]):([0-5][0-9]) ([aA|pP])(m|M)$"
                 },
                 new DateFormat{
                     Format="dd-MMM-yy hh:mm:ss t.t.",
-                    Regex = @"([0-3][0-9])-([a-zA-Z]{3})-\d{2} ([0-5][0-9]):([0-5][0-9]):([0-5][0-9]) ([aA|pP]).(m|M).?$"
+                    Regex = @"([0-3][0-9])-([a-zA-Z]{3})-\d{2} ([0-5][0-9]):([0-5][0-9]):([0-5][0-9]) ([aA|pP]).(m|M).$"
                 },
                 new DateFormat{
                     Format="yyyy-MM-ddThh:mm:ss",
-                    Regex = @"\d{4}-([0-1][0-9])-([0-3][0-9])T([0-5][0-9]):([0-5][0-9]):([0-5][0-9])?$"
+                    Regex = @"\d{4}-([0-1][0-9])-([0-3][0-9])T([0-5][0-9]):([0-5][0-9]):([0-5][0-9])$"
                 },
                 new DateFormat{
                     Format="dd/MM/yyyy hh:mm",
-                    Regex = @"([0-3][0-9])/([0-1][0-9])/\d{4} ([0-5][0-9]):([0-5][0-9])"
+                    Regex = @"([0-3][0-9])/([0-1][0-9])/\d{4} ([0-1][0-2]):([0-5][0-9])$"
+                },
+                 new DateFormat{
+                    Format="dd/MM/yyyy HH:mm",
+                    Regex = @"([0-3][0-9])/([0-1][0-9])/\d{4} ([0-2][0-9]):([0-5][0-9])$"
                 },
                 new DateFormat{
-                    Format="hh:mm tt dd MMMM yyyy", //"01:51 PM 21 June 2022"
-                    Regex = @"([0-5][0-9]):([0-5][0-9]) ([aA|pP])(m|M) \d{2} [a-zA-Z]+ \d{4}$"
-        },
+                    Format="MM/dd/yyyy HH:mm",
+                    Regex = @"([0-3][0-9])/([0-3][0-9])/\d{4} ([0-2][0-3]):([0-5][0-9])$"
+                }
             };
         }
     }
